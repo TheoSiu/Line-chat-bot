@@ -3,6 +3,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 import os
+import datetime as dt
 
 app = Flask(__name__)
 
@@ -24,7 +25,8 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    message = TextSendMessage(text=event.message.text)
+    date= str(dt.datetime.today())[0:19]
+    message = TextSendMessage(text= date+ event.message.text)
     line_bot_api.reply_message(event.reply_token, message)
 
 
