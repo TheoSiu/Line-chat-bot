@@ -79,7 +79,7 @@ def handle_message(event):
 
         line_bot_api.reply_message(event.reply_token, message)
     else:
-        line_bot_api.reply_message(event.reply_token, 'empty data')
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='empty data'))
 
 
 import os
