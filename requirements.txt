@@ -3,3 +3,4 @@ flask
 requests
 pandas
 datetime
+gunicorn==20.1.0
