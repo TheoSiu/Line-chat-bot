@@ -60,8 +60,8 @@ def notify_weather(today):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     today= dt.datetime.today().strftime('%m-%d')
-    # text_weather= notify_weather(today)
-    text_weather = 'Hello'
+    text_weather= notify_weather(today)
+    # text_weather = 'Hello'
     message = TextSendMessage(text= text_weather)
     line_bot_api.reply_message(event.reply_token, message)
 
