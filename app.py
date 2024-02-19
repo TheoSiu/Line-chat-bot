@@ -37,7 +37,7 @@ def notify_weather(today):
     ## 爬取天氣網站的資訊
     r = requests.get(url)
     data = json.loads(r.text)
-    coll = {}
+    foresct_temp = {}
     
     ## 篩選所要的部分資訊
     for foresct in data['list']:
@@ -46,13 +46,13 @@ def notify_weather(today):
             clock = dt.datetime.fromtimestamp(foresct['dt']).strftime('%H:%M')
             temp = round(foresct['main']['temp'] - 273.15 , 1)
             feel_temp = round(foresct['main']['feels_like'] - 273.15 , 1)
-            coll[clock] = (temp, feel_temp)
+            foresct_temp[clock] = (temp, feel_temp)
         else:
             break
 
     selected_times = ['08:00', '14:00', '17:00', '20:00']
-    foresct_temp = pd.DataFrame(coll ).T 
-    foresct_temp.columns = ['目前溫度' , '體感溫度']
+    # foresct_temp = pd.DataFrame(coll ).T 
+    # foresct_temp.columns = ['目前溫度' , '體感溫度']
     # foresct_temp = foresct_temp.loc[selected_times]
     return foresct_temp
 
