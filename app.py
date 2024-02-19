@@ -53,7 +53,7 @@ def notify_weather(today):
     selected_times = ['08:00', '14:00', '17:00', '20:00']
     foresct_temp = pd.DataFrame(coll ).T 
     foresct_temp.columns = ['目前溫度' , '體感溫度']
-    foresct_temp = foresct_temp.loc[selected_times]
+    # foresct_temp = foresct_temp.loc[selected_times]
     return foresct_temp
 
 
