@@ -36,35 +36,42 @@ def notify_weather(today):
     
     ## 爬取天氣網站的資訊
     r = requests.get(url)
-    data = json.loads(r.text)
+    # data = json.loads(r.text)
     foresct_temp = {}
     
     ## 篩選所要的部分資訊
-    for foresct in data['list']:
-        time= dt.datetime.fromtimestamp(foresct['dt']).strftime('%m-%d %H:%M')
-        if time.startswith(today):
-            clock = dt.datetime.fromtimestamp(foresct['dt']).strftime('%H:%M')
-            temp = round(foresct['main']['temp'] - 273.15 , 1)
-            feel_temp = round(foresct['main']['feels_like'] - 273.15 , 1)
-            foresct_temp[clock] = (temp, feel_temp)
-        else:
-            break
-
-    selected_times = ['08:00', '14:00', '17:00', '20:00']
+    try :
+        data = json.loads(r.text)
+        foresct_temp = {}
+        for foresct in data['list']:
+            time= dt.datetime.fromtimestamp(foresct['dt']).strftime('%m-%d %H:%M')
+            if time.startswith(today):
+                clock = dt.datetime.fromtimestamp(foresct['dt']).strftime('%H:%M')
+                temp = round(foresct['main']['temp'] - 273.15 , 1)
+                feel_temp = round(foresct['main']['feels_like'] - 273.15 , 1)
+                foresct_temp[clock] = (temp, feel_temp)
+            else:
+                break
+        selected_times = ['08:00', '14:00', '17:00', '20:00']
     # foresct_temp = pd.DataFrame(coll ).T 
     # foresct_temp.columns = ['目前溫度' , '體感溫度']
     # foresct_temp = foresct_temp.loc[selected_times]
-    return foresct_temp
+        text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
 
+        return text_weather
+
+    except:
+        return 'cant get the data'
+
+    
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     today= dt.datetime.today().strftime('%m-%d')
-    foresct_temp= notify_weather(today)
-    text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
+    text_weather= notify_weather(today)
+    # text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
     print("Text Weather:", text_weather)  # 加入日誌
 
-    # text_weather = 'Hello'
     message = TextSendMessage(text= text_weather)
     line_bot_api.reply_message(event.reply_token, message)
 
