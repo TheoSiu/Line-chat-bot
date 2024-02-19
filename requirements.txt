@@ -2,6 +2,5 @@ line-bot-sdk
 flask
 requests
 pandas
-json
 datetime
 gunicorn 
