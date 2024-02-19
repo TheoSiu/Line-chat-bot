@@ -57,7 +57,7 @@ def notify_weather(today):
     # foresct_temp.columns = ['目前溫度' , '體感溫度']
     # foresct_temp = foresct_temp.loc[selected_times]
         text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
-
+        print( 'test success or not', text_weather)
         return text_weather
 
     except:
