@@ -68,18 +68,13 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    today= dt.datetime.today().strftime('%m-%d')
-    # text_weather= notify_weather(today)
-    # text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
-    # print("Text Weather:", text_weather)  # 加入日誌
+    today = dt.datetime.today().strftime('%m-%d')
+    text_weather = notify_weather(today)
+    print("Text Weather:", text_weather)  # 加入日志
 
-    message = TextSendMessage(text= notify_weather(today))
-    # if not message:
-    print('message', message)
-    if message:
-
+    if text_weather:  # 检查消息内容是否不为空
+        message = TextSendMessage(text=text_weather)
         line_bot_api.reply_message(event.reply_token, message)
-
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text='empty data'))
 
