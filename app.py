@@ -47,6 +47,8 @@ def notify_weather(today):
             temp = round(foresct['main']['temp'] - 273.15 , 1)
             feel_temp = round(foresct['main']['feels_like'] - 273.15 , 1)
             coll[clock] = (temp, feel_temp)
+        else:
+            break
 
     selected_times = ['08:00', '14:00', '17:00', '20:00']
     foresct_temp = pd.DataFrame(coll ).T 
