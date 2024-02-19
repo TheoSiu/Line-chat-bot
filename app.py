@@ -73,6 +73,7 @@ def handle_message(event):
     print("Text Weather:", text_weather)  # 加入日誌
 
     message = TextSendMessage(text= text_weather)
+    print('message', message)
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
 
         line_bot_api.reply_message(event.reply_token, message)
