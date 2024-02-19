@@ -7,6 +7,7 @@ import datetime as dt
 import requests
 import json
 import pandas as pd
+from package import talk
 
 app = Flask(__name__)
 
@@ -68,13 +69,13 @@ def notify_weather(today):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     today= dt.datetime.today().strftime('%m-%d')
-    text_weather= notify_weather(today)
+    # text_weather= notify_weather(today)
     # text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
-    print("Text Weather:", text_weather)  # 加入日誌
+    # print("Text Weather:", text_weather)  # 加入日誌
 
-    message = TextSendMessage(text= text_weather)
+    message = TextSendMessage(text= talk())
     # if not message:
-    #     print('message', message)
+    print('message', message)
     if message:
 
         line_bot_api.reply_message(event.reply_token, message)
