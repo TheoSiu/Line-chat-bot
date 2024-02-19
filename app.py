@@ -62,6 +62,7 @@ def handle_message(event):
     today= dt.datetime.today().strftime('%m-%d')
     foresct_temp= notify_weather(today)
     text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
+    print("Text Weather:", text_weather)  # 加入日誌
 
     # text_weather = 'Hello'
     message = TextSendMessage(text= text_weather)
