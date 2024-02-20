@@ -14,7 +14,7 @@ def notify_weather(today):
         data = r.json()  # 直接使用 .json() 将响应内容解析为 JSON 格式
         # print('API Response:', data)
 
-        foresct_temp = {f'{today}天氣\n'}
+        foresct_temp = {}
 
         for foresct in data.get('list', []):
             time = dt.datetime.fromtimestamp(foresct['dt']).strftime('%m-%d %H:%M')
@@ -29,7 +29,7 @@ def notify_weather(today):
         selected_times = ['08:00', '14:00', '17:00', '20:00']
         #     # foresct_temp = foresct_temp.loc[selected_times]
 
-        text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
+        text_weather =  f'天氣預報 {today}\n' + '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
         print('test success or not', text_weather)
         return text_weather
 
