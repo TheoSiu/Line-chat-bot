@@ -12,6 +12,8 @@ def notify_weather(today):
         r = requests.get(url)
         r.raise_for_status()  # 确保请求成功，否则抛出异常
         data = r.json()  # 直接使用 .json() 将响应内容解析为 JSON 格式
+        print('API Response:', data)
+
         foresct_temp = {}
 
         for foresct in data.get('list', []):
