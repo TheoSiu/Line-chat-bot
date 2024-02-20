@@ -8,6 +8,7 @@ import requests
 import json
 import pandas as pd
 from package import notify_weather
+import pytz
 
 app = Flask(__name__)
 
@@ -68,7 +69,11 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    today = dt.datetime.today().strftime('%m-%d')
+    
+    ## 獲得今天的日期，並轉為台灣的時區
+    today = dt.datetime.today()
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    today.replace(tzinfo = pytz.utc).astimezone(taipei_tz).strftime('%m-%d')
     text_weather = notify_weather(today)
     print('日期:', today)
     print("Text Weather:", text_weather)  # 加入日志
