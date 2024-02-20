@@ -70,6 +70,7 @@ def callback():
 def handle_message(event):
     today = dt.datetime.today().strftime('%m-%d')
     text_weather = notify_weather(today)
+    print('日期:', today)
     print("Text Weather:", text_weather)  # 加入日志
 
     if text_weather:  # 检查消息内容是否不为空

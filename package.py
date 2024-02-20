@@ -12,9 +12,9 @@ def notify_weather(today):
         r = requests.get(url)
         r.raise_for_status()  # 确保请求成功，否则抛出异常
         data = r.json()  # 直接使用 .json() 将响应内容解析为 JSON 格式
-        print('API Response:', data)
+        # print('API Response:', data)
 
-        foresct_temp = {}
+        foresct_temp = {f'{today}天氣\n'}
 
         for foresct in data.get('list', []):
             time = dt.datetime.fromtimestamp(foresct['dt']).strftime('%m-%d %H:%M')
@@ -27,6 +27,8 @@ def notify_weather(today):
                 break
 
         selected_times = ['08:00', '14:00', '17:00', '20:00']
+        #     # foresct_temp = foresct_temp.loc[selected_times]
+
         text_weather = '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
         print('test success or not', text_weather)
         return text_weather
