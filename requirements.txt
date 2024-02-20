@@ -4,3 +4,4 @@ requests
 pandas
 datetime
 gunicorn==20.1.0
+pytz==2022.1
