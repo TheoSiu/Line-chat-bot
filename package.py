@@ -35,8 +35,7 @@ def notify_weather(today):
 
         selected_times = ['08:00', '14:00', '17:00', '20:00']
 
-        text_weather = f'天氣預報 {today}\n' + '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
-        print('test success or not', text_weather)
+        text_weather = f'天氣預報 {today}:\n' + '\n'.join([f"{time}: 溫度 {temp}°C, 體感溫度 {feel_temp}°C" for time, (temp, feel_temp) in foresct_temp.items()])
         return text_weather
     except requests.exceptions.RequestException as e:
         print(f'Error: {e}')
