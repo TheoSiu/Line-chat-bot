@@ -64,7 +64,9 @@ def send_notification():
     line_bot_api.push_message(user_id, messages=message)
 
 # 设置定时任务，每天的特定时间触发
-schedule.every().day.at("16:58").do(send_notification)
+# schedule.every().day.at("16:58").do(send_notification)
+schedule.every(5).minutes.do(send_notification)
+
 
 
 import os
