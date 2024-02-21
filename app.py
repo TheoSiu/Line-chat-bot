@@ -44,6 +44,8 @@ def handle_message(event):
     text_weather = notify_weather(today)
     print('日期:', today)
     print("Text Weather:", text_weather)  # 加入日志
+    user_id = event.source.user_id
+    print(user_id)
     # all_user_ids = get_all_user_ids_from_database()
     # print(all_user_ids)
 
@@ -53,24 +55,6 @@ def handle_message(event):
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text='empty data'))
 
-@app.route("/scheduled_notification", methods=["GET"])
-def scheduled_notification():
-    # 在这里调用您的通知函数或其他希望定时执行的任务
-    # today = dt.datetime.today()
-    # taipei_tz = pytz.timezone('Asia/Taipei')
-    # today = today.replace(tzinfo=pytz.utc).astimezone(taipei_tz).strftime('%m-%d')
-    # text_weather = notify_weather(today)
-    # print('日期:', today)
-    # print("Scheduled Text Weather:", text_weather)  # 加入日志
-    text_weather= 'Hello'
-    if text_weather:
-        # 在这里发送通知或执行其他操作
-        line_bot_api.push_message('U4a3faf91de8aee80b1412e462ae9807e', TextSendMessage(text=text_weather))
-        # pass
-    else:
-        print('empty data')
-
-    return "Scheduled notification triggered."
 
 
 import os
