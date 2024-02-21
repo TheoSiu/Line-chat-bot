@@ -9,6 +9,8 @@ import json
 import pandas as pd
 from package import notify_weather
 import pytz
+import schedule
+import time
 
 app = Flask(__name__)
 
@@ -50,11 +52,19 @@ def handle_message(event):
     # print(all_user_ids)
 
     if text_weather:  # 检查消息内容是否不为空
-        message = TextSendMessage(text=text_weather)
+        message = TextSendMessage(text = text_weather)
         line_bot_api.reply_message(event.reply_token, message)
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text='empty data'))
 
+user_id = 'U4a3faf91de8aee80b1412e462ae9807e'  # 用户的 Line ID
+
+def send_notification():
+    message = TextSendMessage(text='定时通知：这是一条定时发送的消息！')
+    line_bot_api.push_message(user_id, messages=message)
+
+# 设置定时任务，每天的特定时间触发
+schedule.every().day.at("16:58").do(send_notification)
 
 
 import os
