@@ -59,17 +59,17 @@ def handle_message(event):
 
 user_id = 'U4a3faf91de8aee80b1412e462ae9807e'  # 用户的 Line ID
 
-def send_notification():
-    message = TextSendMessage(text='定时通知：我很棒的')
-    line_bot_api.push_message(user_id, messages=message)
+# def send_notification():
+#     message = TextSendMessage(text='定时通知：我很棒的')
+#     line_bot_api.push_message(user_id, messages=message)
 
 # 设置定时任务，每天的特定时间触发
 # schedule.every().day.at("16:58").do(send_notification)
-schedule.every(5).minutes.do(send_notification)
+# schedule.every(5).minutes.do(send_notification)
 
-while True:
-    schedule.run_pending()
-    time.sleep(60)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(60)
 
 
 import os
