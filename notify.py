@@ -26,7 +26,7 @@ line_bot_api = LineBotApi(os.environ["CHANNEL_ACCESS_TOKEN"])
 user_id = 'U4a3faf91de8aee80b1412e462ae9807e'  # 用户的 Line ID
 
 def send_notification():
-    message = TextSendMessage(text='定时通知：这是一条定时发送的消息！')
+    message = TextSendMessage(text='定时通知：獨孤無敵')
     line_bot_api.push_message(user_id, messages=message)
 
 # 设置定时任务，每天的特定时间触发
