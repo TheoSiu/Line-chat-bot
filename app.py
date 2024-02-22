@@ -67,6 +67,9 @@ def send_notification():
 # schedule.every().day.at("16:58").do(send_notification)
 schedule.every(5).minutes.do(send_notification)
 
+while True:
+    schedule.run_pending()
+    time.sleep(1)
 
 
 import os
