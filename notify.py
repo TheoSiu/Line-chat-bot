@@ -1,6 +1,6 @@
 from linebot import LineBotApi, WebhookHandler
 import os
-
+import requests
 
 lineToken = LineBotApi(os.environ["CHANNEL_ACCESS_TOKEN"])
 # handler = WebhookHandler(os.environ["CHANNEL_SECRET"])
