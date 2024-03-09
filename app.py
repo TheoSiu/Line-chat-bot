@@ -11,6 +11,7 @@ from package import Weather
 import pytz
 import schedule
 import time
+import numpy as np
 
 app = Flask(__name__)
 # CHANNEL_ACCESS_TOKEN= "3L+VeuaSQtYyvdEfP8/NT9UuRCJWkgpM6i81WxF++6cppQTmfrdI7cQhQXcsRdwkno7qOFGnsyoxy8I8d3gtRV9uonV2IDnId49TqbZXgCVEPRMSDbYKhiUA1a3gVTprDzfXumuY6VolHDmIEO+MJgdB04t89/1O/w1cDnyilFU="
