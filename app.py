@@ -12,9 +12,10 @@ import pytz
 import schedule
 import time
 import numpy as np
+from linebot.models import RichMenu, RichMenuSize, RichMenuArea, URIAction
 
 app = Flask(__name__)
-# CHANNEL_ACCESS_TOKEN= "3L+VeuaSQtYyvdEfP8/NT9UuRCJWkgpM6i81WxF++6cppQTmfrdI7cQhQXcsRdwkno7qOFGnsyoxy8I8d3gtRV9uonV2IDnId49TqbZXgCVEPRMSDbYKhiUA1a3gVTprDzfXumuY6VolHDmIEO+MJgdB04t89/1O/w1cDnyilFU="
+token= "3L+VeuaSQtYyvdEfP8/NT9UuRCJWkgpM6i81WxF++6cppQTmfrdI7cQhQXcsRdwkno7qOFGnsyoxy8I8d3gtRV9uonV2IDnId49TqbZXgCVEPRMSDbYKhiUA1a3gVTprDzfXumuY6VolHDmIEO+MJgdB04t89/1O/w1cDnyilFU="
 # CHANNEL_SECRET=1fee91f8ffb4152aa8a54ea04e5a05ef
 line_bot_api = LineBotApi(os.environ['CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(os.environ['CHANNEL_SECRET'])
@@ -30,70 +31,107 @@ def callback():
         abort(400)
     return "OK"
     
-
+### 收到位置訊息，傳送當前天氣 ###
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
     # 取得位置訊息
     location_message = event.message
     address = location_message.address.replace('台', '臺')
-    # weath= Weather
-    # now_weather = weath.Now_weather(address)
-    now_weather = f"{Weather.Now_weather(address)}  \n\n{Weather.forecast(address)}"
-    # print(type(address))
-    # now_weather = Weather.Now_weather(address)
+    reply_message = f"{Weather.Now_weather(address)}  \n\n{Weather.forecast(address)}"
     # # 回傳位置信息
-    # reply_message = f"您的位置是：\n緯度:{latitude}\n經度:{longitude}\n地址:{address}"
-    reply_message= now_weather
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
 
 
-### 收到位置訊息，傳送當前天氣 ###
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
+    text= event.message.text
+    if text == '天氣資訊':
 
-    # 獲得今天的日期，並轉為台灣的時區
-    today = dt.datetime.today()
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    today = today.replace(tzinfo = pytz.utc).astimezone(taipei_tz).strftime('%m-%d')
-    # text_weather = notify_weather(today)
-    weath= Weather
-    text_weather = weath.notify_weather(today)
-    print('日期:', today)
-    print("Text Weather:", text_weather)  # 加入日志
-    user_id = event.source.user_id
-    print(f'Line API: {line_bot_api}')
+        message = TextSendMessage(text = '請分享位置資訊')
+        line_bot_api.reply_message(event.reply_token, message)
 
-    if text_weather:  # 检查消息内容是否不为空
-        message = TextSendMessage(text = text_weather)
-    # message = TextSendMessage(text = 'hello _ haha')
-    line_bot_api.reply_message(event.reply_token, message)
+    if text == '今日運勢':
+
+        message = TextSendMessage(text = '請輸入星座名稱')
+        line_bot_api.reply_message(event.reply_token, message)
+
+    for con in Weather.Total_Con:
+        if text in con:
+            print(text, '==================')
+            reply_message = Weather.Horoscope(text)
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
+
+    else:
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='請點擊選單，獲取資訊'))
 
     # else:
     #     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='empty data'))
 
-user_id = 'U4a3faf91de8aee80b1412e462ae9807e'  # 用户的 Line ID
+# user_id = 'U4a3faf91de8aee80b1412e462ae9807e'  # 用户的 Line ID
 
-@app.route("/test_new_feature")
-def test_new_feature():
+# 創建 RichMenu
+rich_menu_to_create_1 = RichMenu(
+    size=RichMenuSize(width=2500, height=1686),
+    selected=False,
+    name="Nice richmenu",
+    chat_bar_text="開啟選單",
+    areas=[
+        # 左半部
+        RichMenuArea(
+            bounds=RichMenuBounds(x=0, y=0, width=1250, height=1686),
+            action=MessageAction(label='Left', text='天氣資訊')
+            # action={'type': 'message', 'label': 'Left', 'text': 'Left Menu'}
+        ),
+        # 右半部
+        RichMenuArea(
+            bounds=RichMenuBounds(x=1251, y=0, width=1250, height=1686),
+            action=MessageAction(label='Right', text='今日運勢')
+        ),
+    ]
+)
 
-    # 在這裡添加你的新功能的測試邏輯
-    return "Testing the new feature!"
+
+# # 上傳豐富菜單圖片
+with open("/Users/siuuu/Downloads/AI.jpg", "rb") as f:
+    rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
+    line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", f)
+# rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
+line_bot_api.set_default_rich_menu(rich_menu_id_1)
 
 
-# def send_notification():
-#     message = TextSendMessage(text='定时通知：我很棒的')
-#     line_bot_api.push_message(user_id, messages=message)
+rich_menu_to_create_2 = RichMenu(
+    size=RichMenuSize(width=2500, height=1686),
+    selected=False,
+    name="Nice richmenu",
+    chat_bar_text="開啟選單",
+    areas=[
+        
+        # 右半部
+        RichMenuArea(
+            bounds=RichMenuBounds(x=1251, y=0, width=1250, height=1686),
+            # action=PostbackAction(label='Right', data='今日運勢')
+            action={'type': 'message', 'label': 'Left', 'text': 'Left Menu'}
+            
+        ),
+    ]
+)
 
-# 设置定时任务，每天的特定时间触发
-# schedule.every().day.at("16:58").do(send_notification)
-# schedule.every(5).minutes.do(send_notification)
+# rich_menu_id_2 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_2)
 
-# while True:
-#     schedule.run_pending()
-#     time.sleep(60)
+# with open("/Users/siuuu/Downloads/Blank 2 Grids Collage.png", "rb") as f:
+#     rich_menu_id_2 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_2)
+#     line_bot_api.set_rich_menu_image(rich_menu_id_2, "image/png", f)
+
+# # # 設置預設豐富菜單
+# line_bot_api.set_default_rich_menu(rich_menu_id_1)
+
+# line_bot_api.set_default_rich_menu(rich_menu_id_2)
+# line_bot_api.link_rich_menu_to_user('user_id', rich_menu_id_1)
+
+print(line_bot_api, '------------------')
+print(f'{line_bot_api}')
 
 import os
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)

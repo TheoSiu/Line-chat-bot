@@ -4,6 +4,9 @@ import json
 import pandas as pd
 import pytz 
 import numpy as np
+import bs4
+from bs4 import BeautifulSoup
+import re
 
 class Weather:
     # weather_API = "c78bc673af3701bbd7ac6ccf5f595b9e"
@@ -16,11 +19,14 @@ class Weather:
             "高雄市": "F-D0047-065", "新北市": "F-D0047-069", "臺中市": "F-D0047-073", "臺南市": "F-D0047-077",
             "連江縣": "F-D0047-081", "金門縣": "F-D0047-085"
         }
+    con_url = "https://www.cosmopolitan.com/tw/horoscopes/today/"
+    Total_Con= ['水瓶座','處女座','獅子座','巨蟹座','雙子座','金牛座',\
+                '牡羊座','天蠍座','射手座','雙魚座','摩羯座','天秤座']
 
 
     @classmethod
     def notify_weather(cls, today):
-        weather_API = "c78bc673af3701bbd7ac6ccf5f595b9e"
+        # weather_API = "c78bc673af3701bbd7ac6ccf5f595b9e"
         city = 'Taipei'
         url = f'http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={cls.weather_API}'
 
@@ -133,3 +139,45 @@ class Weather:
                         break
         
         return msg
+    
+    @classmethod
+    def Horoscope(cls, hor):
+        hor += '座' if '座' not in hor else ''
+
+        response = requests.get(cls.con_url)
+        html_content = response.text
+        soup = BeautifulSoup(html_content, 'html.parser')
+        links_with_attribute = soup.find_all('a', attrs={'data-vars-ga-outbound-link': True})
+        total_con= []
+    #     my = '雙魚'
+        # 遍历每个a标签，提取链接
+        for link in links_with_attribute:
+            # 寻找包含星座名称的 span 标签
+            span_tag = link.find('span', class_='css-aktacr e1rluvgc5')
+
+            # 如果找到了 span 标签，提取文本内容并打印
+            if span_tag:
+                constellation_name = span_tag.text
+                total_con.append(constellation_name)
+
+                if hor in constellation_name:
+                    link_url = link['data-vars-ga-outbound-link']
+                    
+                    ## 爬取指定星座的每日運勢
+                    response = requests.get(link_url)
+                    html_content = response.text
+
+                    soup = BeautifulSoup(html_content, 'html.parser')
+                    short_comment = soup.find('meta', {'name': 'sailthru.excerpt'})
+                    
+                    ## 提取所要的資訊
+                    short_comment_content = short_comment.get('content', '')
+                    match = re.search(r'(\d{4}/\d{2}/\d{2}.*?)延伸閱讀', short_comment_content)
+                    extracted_content = match.group(1)
+                    extracted_content = extracted_content.replace('運勢', '運勢:\n')
+                    extracted_content = extracted_content.replace('整體', '\n整體')
+                    extracted_content = extracted_content.replace('幸運', '\n幸運')
+
+                    return (f"{hor}\n{extracted_content}")
+        else:
+            return("未找到此星座名稱")
