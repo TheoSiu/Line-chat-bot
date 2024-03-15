@@ -90,9 +90,12 @@ rich_menu_to_create_1 = RichMenu(
     ]
 )
 
+# https://lurl.cc/WYlr9
 
 # # 上傳豐富菜單圖片
-with open("/Users/siuuu/Downloads/AI.jpg", "rb") as f:
+# with open("/Users/siuuu/Downloads/AI.jpg", "rb") as f:
+with open("https://lurl.cc/WYlr9", "rb") as f:
+
     rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
     line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", f)
 # rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
