@@ -9,3 +9,4 @@ schedule==0.6.0
 numpy
 beautifulsoup4
 regex
+BytesIO
