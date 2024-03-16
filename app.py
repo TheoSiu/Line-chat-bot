@@ -17,8 +17,6 @@ from io import BytesIO
 
 
 app = Flask(__name__)
-token= "3L+VeuaSQtYyvdEfP8/NT9UuRCJWkgpM6i81WxF++6cppQTmfrdI7cQhQXcsRdwkno7qOFGnsyoxy8I8d3gtRV9uonV2IDnId49TqbZXgCVEPRMSDbYKhiUA1a3gVTprDzfXumuY6VolHDmIEO+MJgdB04t89/1O/w1cDnyilFU="
-# CHANNEL_SECRET=1fee91f8ffb4152aa8a54ea04e5a05ef
 line_bot_api = LineBotApi(os.environ['CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(os.environ['CHANNEL_SECRET'])
 
@@ -59,17 +57,12 @@ def handle_text_message(event):
 
     for con in Weather.Total_Con:
         if text in con:
-            print(text, '==================')
             reply_message = Weather.Horoscope(text)
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
 
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text='請點擊選單，獲取資訊'))
 
-    # else:
-    #     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='empty data'))
-
-# user_id = 'U4a3faf91de8aee80b1412e462ae9807e'  # 用户的 Line ID
 
 # 創建 RichMenu
 rich_menu_to_create_1 = RichMenu(
@@ -92,13 +85,6 @@ rich_menu_to_create_1 = RichMenu(
     ]
 )
 
-# # 上傳豐富菜單圖片
-# with open("https://i.imgur.com/srvVVsd.jpeg", "rb") as f:
-
-#     rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
-#     line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", f)
-# line_bot_api.set_default_rich_menu(rich_menu_id_1)
-
 url = "https://i.imgur.com/srvVVsd.jpeg"
 response = requests.get(url)
 
@@ -117,29 +103,6 @@ if response.status_code == 200:
     line_bot_api.set_default_rich_menu(rich_menu_id_1)
 # else:
 #     print("無法從 URL 獲取圖片")
-# imgur_image_url = "https://imgur.com/a/Bqq1lI8"
-# response = requests.get(imgur_image_url)
-
-# 確認回應狀態碼
-# if response.status_code == 200:
-#     # 將圖片作為二進制數據寫入暫存檔
-#     with open("temp_image.jpg", "wb") as f:
-#         f.write(response.content)
-
-#     # 設置 Line Bot 選單背景圖片
-#     # rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
-#     with open("temp_image.jpg", "rb") as f:
-#         rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
-#         line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", f)
-    
-#     # 設置預設的 Line Bot 選單
-#     line_bot_api.set_default_rich_menu(rich_menu_id_1)
-
-#     # 刪除暫存檔
-#     import os
-#     os.remove("temp_image.jpg")
-# else:
-#     print("Failed to download the image.")
 
 import os
 if __name__ == "__main__":
