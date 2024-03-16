@@ -13,6 +13,8 @@ import schedule
 import time
 import numpy as np
 from linebot.models import RichMenu, RichMenuSize, RichMenuArea, URIAction
+from io import BytesIO
+
 
 app = Flask(__name__)
 token= "3L+VeuaSQtYyvdEfP8/NT9UuRCJWkgpM6i81WxF++6cppQTmfrdI7cQhQXcsRdwkno7qOFGnsyoxy8I8d3gtRV9uonV2IDnId49TqbZXgCVEPRMSDbYKhiUA1a3gVTprDzfXumuY6VolHDmIEO+MJgdB04t89/1O/w1cDnyilFU="
@@ -90,49 +92,54 @@ rich_menu_to_create_1 = RichMenu(
     ]
 )
 
-# https://lurl.cc/WYlr9
-
 # # 上傳豐富菜單圖片
-# with open("/Users/siuuu/Downloads/AI.jpg", "rb") as f:
-with open("https://lurl.cc/WYlr9", "rb") as f:
+# with open("https://i.imgur.com/srvVVsd.jpeg", "rb") as f:
 
-    rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
-    line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", f)
-# rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
-line_bot_api.set_default_rich_menu(rich_menu_id_1)
-
-
-rich_menu_to_create_2 = RichMenu(
-    size=RichMenuSize(width=2500, height=1686),
-    selected=False,
-    name="Nice richmenu",
-    chat_bar_text="開啟選單",
-    areas=[
-        
-        # 右半部
-        RichMenuArea(
-            bounds=RichMenuBounds(x=1251, y=0, width=1250, height=1686),
-            # action=PostbackAction(label='Right', data='今日運勢')
-            action={'type': 'message', 'label': 'Left', 'text': 'Left Menu'}
-            
-        ),
-    ]
-)
-
-# rich_menu_id_2 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_2)
-
-# with open("/Users/siuuu/Downloads/Blank 2 Grids Collage.png", "rb") as f:
-#     rich_menu_id_2 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_2)
-#     line_bot_api.set_rich_menu_image(rich_menu_id_2, "image/png", f)
-
-# # # 設置預設豐富菜單
+#     rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
+#     line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", f)
 # line_bot_api.set_default_rich_menu(rich_menu_id_1)
 
-# line_bot_api.set_default_rich_menu(rich_menu_id_2)
-# line_bot_api.link_rich_menu_to_user('user_id', rich_menu_id_1)
+url = "https://i.imgur.com/srvVVsd.jpeg"
+response = requests.get(url)
 
-print(line_bot_api, '------------------')
-print(f'{line_bot_api}')
+# 確認回應狀態碼
+if response.status_code == 200:
+    # 將圖片的二進制數據轉換為 BytesIO 對象
+    image_data = BytesIO(response.content)
+    
+    # 創建 Line Bot 選單
+    rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
+    
+    # 設置選單背景圖片
+    line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", image_data)
+    
+    # 設置預設的 Line Bot 選單
+    line_bot_api.set_default_rich_menu(rich_menu_id_1)
+# else:
+#     print("無法從 URL 獲取圖片")
+# imgur_image_url = "https://imgur.com/a/Bqq1lI8"
+# response = requests.get(imgur_image_url)
+
+# 確認回應狀態碼
+# if response.status_code == 200:
+#     # 將圖片作為二進制數據寫入暫存檔
+#     with open("temp_image.jpg", "wb") as f:
+#         f.write(response.content)
+
+#     # 設置 Line Bot 選單背景圖片
+#     # rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
+#     with open("temp_image.jpg", "rb") as f:
+#         rich_menu_id_1 = line_bot_api.create_rich_menu(rich_menu=rich_menu_to_create_1)
+#         line_bot_api.set_rich_menu_image(rich_menu_id_1, "image/jpeg", f)
+    
+#     # 設置預設的 Line Bot 選單
+#     line_bot_api.set_default_rich_menu(rich_menu_id_1)
+
+#     # 刪除暫存檔
+#     import os
+#     os.remove("temp_image.jpg")
+# else:
+#     print("Failed to download the image.")
 
 import os
 if __name__ == "__main__":
